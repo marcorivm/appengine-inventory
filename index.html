@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}
+Home
+{% endblock %}
+
+{%block navigation %}
+ {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="row-fluid">
+    <div class="span4 well" >
+          <div class="span3">
+            <img  class="img-polaroid" src="assets/img/team.png" alt="Marco Rivadeneyra" >
+          </div>
+          <div class="span1 offset1">
+                  <p><strong>Marco Rivadeneyra</strong></p>
+                  <p>A01099497</p>
+          </div>
+      </div>
+    <div class="span7 well">
+      <a href="/edit?product=new" class="btn btn-success">Add new product</a>
+      <table class="table table-striped">
+          <thead>
+              <tr>
+                  <th>Product code</th>
+                  <th>Description</th>
+                  <th>Stock</th>
+                  <th>Actions</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>
+                        <a href="/edit?product={{ product.key().name() }}">{{ product.key().name() }}</a>
+                    </td>
+                    <td>
+                        {{ product.description }}
+                    </td>
+                    <td>
+                        {{ product.stock }}
+                    </td>
+                    <td>
+                        <a title="View details"  href="/edit?product={{ product.key().name() }}" class="btn btn-info btn-mini"><i class="icon-eye-open icon-white"></i></a>&nbsp;&nbsp;&nbsp;
+                        <a title="Delete"  href="/delete?product={{ product.key().name() }}" data-product-id="{{ product.key().name() }}" class="btn btn-danger btn-mini delete-product"><i class="icon-trash icon-white"></i></a>&nbsp;&nbsp;&nbsp;
+                    </td>
+                </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+    </div>
+</div>
+<script type="text/javascript">
+jQuery(".delete-product").on("click", function(){
+    var obj = jQuery(this);
+    jQuery.post('/delete?', { 'product' : obj.attr("data-product-id") } )
+    obj.parents('tr').remove();
+    return false;
+})
+</script>
+{% endblock %}

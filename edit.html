@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}
+Editing product
+{% endblock %}
+
+{%block navigation %}
+ {{ super() }}
+{% endblock %}
+
+{% block content %}
+{% if has_errors %}
+<div class="alert alert-error">
+Please make sure all the fields are filled correctly!
+</div>
+{% endif %}
+<div class="well">
+  <form class="form-horizontal" action="/save?product={{ 'new' if is_new else product.key().name() }}" method="POST">
+    <fieldset>
+      <legend>
+        {{ 'Adding new product' if is_new else 'Editing product' }}
+      </legend>
+      <div class="control-group">
+        <label class="control-label" for="product_code">Product code:</label>
+        <div class="controls">
+          {% if is_new %}
+              <input type="text" class="input-xlarge" name="product_code" id="product_code" />
+          {% else %}
+              <span class="input-xlarge uneditable-input">
+                {{ product.key().name() }}
+              </span>
+          {% endif %}
+          <p class="help-block">Unique product identifier. Must be 10 characters long</p>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="stock">Stock</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" id="stock" name="stock" value="{{ 0 if is_new else product.stock }}" placeholder="Items in stock" />
+          <p class="help-block">How many items are in stock? <b>Previous items in stock: {{ product.stock }}</b></p>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="description">Description</label>
+        <div class="controls">
+          <textarea class="input-xlarge" id="description" name="description" rows="5" palceholder="Product description">{{ '' if is_new else product.description }}</textarea>
+          <p class="help-block">Description should not be longer than 255 characters</b></p>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save changes</button>
+        <button class="btn" onclick="window.location = '/'; return false;">Cancel</button>
+      </div>
+    </fieldset>
+  </form>
+</div>
+{% endblock %}
